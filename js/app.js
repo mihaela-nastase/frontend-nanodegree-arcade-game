@@ -120,10 +120,20 @@ Player.prototype.update = function(dt) {
 	else if (this.y > 400) {
 		this.y = 400;
 	}
-	//reset position if the player reaches the water
+	//reset position if the player reaches the water, unless the game is over
 	else if (this.y < 5) {
-		this.x = 200;
-		this.y = 400;	
+		//increment the score counter (as long as the game isn't over) and display it on the page
+		if (lives > -1) {
+			this.x = 200;
+			this.y = 400;
+			(function incrementCounter() {
+				score++;
+				counter.textContent = 'Score: ' + score;
+			})();
+		}
+		else {
+			this.y = 0;
+		}	
 	}
 
 	//check for enemy collision
@@ -180,6 +190,10 @@ document.addEventListener('keyup', function(e) {
 });
 
 
+//count the moves starting from 0
+const counter = document.querySelector(".score");
+let score = 0;
+
 const heart = document.querySelectorAll(".fa-heart");
 const max_lives = 3; // There are technically 4 lives. Upon losing the three lives/hearts displayed on the screen, the player still has one more life. That is the case because the three lives are extra lives that can be replenished.
 let lives;
@@ -196,10 +210,15 @@ function drawLives() {
 	}
 }
 
+
 //(re)start the game
 function restartGame() {
 
 	setTimeout (function() {
+		//re(set) the score counter
+		counter.textContent = 'Score: 0';
+		score = 0;
+
 		//re(set) the hearts
 		heart[2].style.visibility="visible";
 		heart[1].style.visibility="visible";
