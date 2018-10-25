@@ -189,6 +189,22 @@ document.addEventListener('keyup', function(e) {
 	player.keyMap[e.keyCode] = 0; // When a key is released its value is set to 0
 });
 
+function startTimer() {
+
+	//prevent more instances of the timer from running
+	document.removeEventListener('keydown', startTimer);
+
+	myInterval = setInterval(function(){
+		//increment the number every second
+		sec++;
+		//calculate the seconds and minutes and convert them to strings
+		const minutes = Math.floor(sec/60).toString();
+		const seconds = Math.floor(sec%60).toString();
+		//display the timer in double digits
+		timer.innerText = minutes.padStart(2, "0") + ":" + seconds.padStart(2, "0");
+	}, 1000);
+}
+
 
 //count the moves starting from 0
 const counter = document.querySelector(".score");
@@ -211,6 +227,14 @@ function drawLives() {
 }
 
 
+// the timer displays the seconds and minutes that have passed
+const timer = document.querySelector(".timer");
+timer.innerText = "00:00";
+let sec = 0;
+//define the variable so clearInterval can be called outside of the startTimer function
+let myInterval;
+
+
 //(re)start the game
 function restartGame() {
 
@@ -225,7 +249,12 @@ function restartGame() {
 		heart[0].style.visibility="visible";
 		lives = max_lives;
 
-		//set enemies with an immediately-invoked function
+		//re(set) the timer
+		sec = 0;
+		timer.innerText = "00:00";
+		clearInterval(myInterval);
+
+		//re(set) enemies with an immediately-invoked function
 		(function instantiateEnemies() {
 			allEnemies = [];
 			allEnemies.push(new Enemy(-100, 60));
@@ -235,7 +264,10 @@ function restartGame() {
 			allEnemies.push(new Enemy(-600, 60));
 			allEnemies.push(new Enemy(-600, 225));
 		})();
-	});
+	}, 100);
+
+	//start the timer upon the first move
+	document.addEventListener('keydown', startTimer);
 }
 
 //start the game
