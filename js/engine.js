@@ -174,11 +174,28 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
+
 		// Fox character. Inspiration source: http://king-hime.tumblr.com/post/161131875868/some-game-sprites-i-did-for-a-customer-this-was
-		'images/fox-front.png',
-		'images/fox-back.png',
-		'images/fox-left.png',
-		'images/fox-right.png'
+		'images/fox-up1.png',
+		'images/fox-up2.png',
+		'images/fox-up3.png',
+		'images/fox-up4.png',
+
+		'images/fox-down1.png',
+		'images/fox-down2.png',
+		'images/fox-down3.png',
+		'images/fox-down4.png',
+
+		'images/fox-left1.png',
+		'images/fox-left2.png',
+		'images/fox-left3.png',
+		'images/fox-left4.png',
+
+		'images/fox-right1.png',
+		'images/fox-right2.png',
+		'images/fox-right3.png',
+		'images/fox-right4.png'
+
     ]);
     Resources.onReady(init);
 

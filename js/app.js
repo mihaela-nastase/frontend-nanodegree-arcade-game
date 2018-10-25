@@ -32,33 +32,85 @@ Enemy.prototype.render = function() {
 var Player = function() {
 	this.x = 200;
 	this.y = 400;
-	this.sprite = 'images/fox-front.png';
-	this.speed = 500;
+	this.sprite = 'images/fox-';
+	this.spriteIndex = 1; //integer between 1 and 4 (there are 4 animation frames)
+	this.spriteIndexFloat = 1; //float, used to create the animation
+	this.direction='down'; // looking down
+	this.speed = 300;
+	this.width = 60;
+	this.height = 60;
+	this.stopanimationhandler = null; //keeps track if there is a timer set to stop the animation
+
+	//this array represents the first 128 ASCII codes (most of the usual keyboard keys). 
+	//We fill the array with zeros so we can use Math.max on it. Having any undefined index will make Math.max return NaN
+	this.keyMap = new Array(255).fill(0);
 }
+
+
+Player.prototype.animate = function(direction, dt, stop=false) {
+
+	const animationSpeed = 10;
+	const maxFrames = 4; //the animation has 4 frames, straight (legs aligned), right leg, straight, left leg, and it repeats itself
+
+	/*we need a float number so we can control how fast the sprite index changes.
+	We increment this float number by a manually tweaked animationSpeed number and 
+	dt which will ensure the animation runs at the same speed for all computers.*/
+	this.spriteIndexFloat = this.spriteIndexFloat+animationSpeed*dt;
+	//since spriteIndex must be an integer, we round up spriteIndexFloat
+	this.spriteIndex = Math.ceil(this.spriteIndexFloat);
+
+	if (this.spriteIndex > maxFrames || direction!=this.direction || stop===true) {
+		//after reaching the 4th frame, or upon changing the direction or stopping, the character reverts to the straight pose
+		this.spriteIndex = 1;
+		this.spriteIndexFloat = 1;
+	}
+
+	//cancel the stop animation timer, since we are currently moving
+	clearInterval(this.stopanimationhandler);
+	this.stopanimationhandler = null;
+
+	//change the direction only if it's a valid one. When the movement is stopped we get the null direction
+	if (direction!=null) {
+		this.direction=direction;
+	}
+}
+
 
 // The player class requires an update(), and a render() method.
 
 // The update method makes the player move when input is received
 Player.prototype.update = function(dt) {
 
-	//update position
-	if (this.keyPress === 'left') {
-		this.x -= this.speed * dt;
-		this.sprite = 'images/fox-left.png';		
+
+	const max = Math.max(...this.keyMap); // this selects the highest value from the keyMap, that is, the key last pressed
+
+	//if a key was pressed then max would be higher than zero
+	if (max > 0) {
+
+		if (this.keyMap[37] === max) {
+			this.x -= this.speed * dt;
+			this.animate('left', dt);
+		}
+		else if (this.keyMap[39] === max) {
+			this.x += this.speed * dt;
+			this.animate('right', dt);
+		}
+		else if (this.keyMap[38] === max) {
+			this.y -= this.speed * dt;
+			this.animate('up', dt);
+		}
+		else if (this.keyMap[40] === max) {
+			this.y += this.speed * dt;
+			this.animate('down', dt);
+		}
 	}
-	else if (this.keyPress === 'right') {
-		this.x += this.speed * dt;
-		this.sprite = 'images/fox-right.png';
+	else
+	{
+		//no key is currently pressed so we try to stop any running animation
+		if (this.stopanimationhandler == null) {
+			this.stopanimationhandler = setTimeout(function() {player.animate(null, 0, true);},200);		
+		}
 	}
-	if (this.keyPress === 'up') {
-		this.y -= this.speed * dt;
-		this.sprite = 'images/fox-back.png';
-	}
-	else if (this.keyPress === 'down') {
-		this.y += this.speed * dt;
-		this.sprite = 'images/fox-front.png';
-	}
-	this.keyPress = null;
 
 	//set axis boundaries 
 	if (this.x < 0) {
@@ -77,7 +129,7 @@ Player.prototype.update = function(dt) {
 }
 
 Player.prototype.render = function() {
-	ctx.drawImage(Resources.get(this.sprite), this.x, this.y, 105, 170);
+	ctx.drawImage(Resources.get(this.sprite+this.direction+this.spriteIndex+'.png'), this.x, this.y, 105, 170);
 };
 
 Player.prototype.handleInput = function(e) {
@@ -91,16 +143,15 @@ var allEnemies = [];
 var player = new Player();
 
 
-// This listens for key presses and sends the keys to the Player.handleInput() method.
-document.addEventListener('keyup', function(e) {
-    var allowedKeys = {
-        37: 'left',
-        38: 'up',
-        39: 'right',
-        40: 'down'
-    };
+// This listens for key presses. I used 'keydown' for continuous movement
+document.addEventListener('keydown', function(e) {
+	var max = Math.max(...player.keyMap); // this selects the highest value from the keyMap. The key pressed last will have the highest value
+	player.keyMap[e.keyCode] = max + 1; // the last key you press has priority. Its value is incremented by one, thus having the highest value.
+});
 
-    player.handleInput(allowedKeys[e.keyCode]);
+// This listens for released keys. It stops the player from moving when the key is released, i.e. on 'keyup'. Without it, the player would not stop moving.
+document.addEventListener('keyup', function(e) {
+	player.keyMap[e.keyCode] = 0; // When a key is released its value is set to 0
 });
 
 //set enemies with an immediately-invoked function
