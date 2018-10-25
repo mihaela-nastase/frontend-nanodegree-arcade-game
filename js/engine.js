@@ -93,6 +93,7 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
+		// I added dt for smooth player movement 
         player.update(dt);
     }
 
@@ -173,7 +174,11 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+		// Fox character. Inspiration source: http://king-hime.tumblr.com/post/161131875868/some-game-sprites-i-did-for-a-customer-this-was
+		'images/fox-front.png',
+		'images/fox-back.png',
+		'images/fox-left.png',
+		'images/fox-right.png'
     ]);
     Resources.onReady(init);
 

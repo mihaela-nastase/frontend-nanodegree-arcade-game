@@ -1,3 +1,5 @@
+// Inspiration source for the fox character: http://king-hime.tumblr.com/post/161131875868/some-game-sprites-i-did-for-a-customer-this-was
+
 // Enemies our player must avoid
 var Enemy = function(x,y) {
 	this.x = x;
@@ -30,7 +32,7 @@ Enemy.prototype.render = function() {
 var Player = function() {
 	this.x = 200;
 	this.y = 400;
-	this.sprite = 'images/char-boy.png';
+	this.sprite = 'images/fox-front.png';
 	this.speed = 500;
 }
 
@@ -42,15 +44,19 @@ Player.prototype.update = function(dt) {
 	//update position
 	if (this.keyPress === 'left') {
 		this.x -= this.speed * dt;
+		this.sprite = 'images/fox-left.png';		
 	}
 	else if (this.keyPress === 'right') {
 		this.x += this.speed * dt;
+		this.sprite = 'images/fox-right.png';
 	}
 	if (this.keyPress === 'up') {
 		this.y -= this.speed * dt;
+		this.sprite = 'images/fox-back.png';
 	}
 	else if (this.keyPress === 'down') {
 		this.y += this.speed * dt;
+		this.sprite = 'images/fox-front.png';
 	}
 	this.keyPress = null;
 
@@ -71,7 +77,7 @@ Player.prototype.update = function(dt) {
 }
 
 Player.prototype.render = function() {
-	ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+	ctx.drawImage(Resources.get(this.sprite), this.x, this.y, 105, 170);
 };
 
 Player.prototype.handleInput = function(e) {
