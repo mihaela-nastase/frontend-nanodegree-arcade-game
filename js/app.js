@@ -31,25 +31,26 @@ var Player = function() {
 	this.x = 200;
 	this.y = 400;
 	this.sprite = 'images/char-boy.png';
+	this.speed = 500;
 }
 
 // The player class requires an update(), and a render() method.
 
 // The update method makes the player move when input is received
-Player.prototype.update = function() {
+Player.prototype.update = function(dt) {
 
 	//update position
 	if (this.keyPress === 'left') {
-		this.x -= 50;
+		this.x -= this.speed * dt;
 	}
 	else if (this.keyPress === 'right') {
-		this.x += 50;
+		this.x += this.speed * dt;
 	}
 	if (this.keyPress === 'up') {
-		this.y -= 50;
+		this.y -= this.speed * dt;
 	}
 	else if (this.keyPress === 'down') {
-		this.y += 50;
+		this.y += this.speed * dt;
 	}
 	this.keyPress = null;
 
