@@ -1,3 +1,34 @@
+/*prevent horizontal scrolling*/
+html {
+	overflow-x: hidden;
+}
+
 body {
     text-align: center;
+}
+
+/*
+ * Styles for the Score Panel
+ */
+
+.score-panel {
+	display: flex;
+	justify-content: space-between;
+	width: 500px;
+	/*Trick for centering: https://css-tricks.com/quick-css-trick-how-to-center-an-object-exactly-in-the-center/ */
+    position: fixed;
+	left: 50%;
+	margin-left: -250px;
+}
+
+.score-panel .hearts {
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+    margin: 0 5px 0 0;
+}
+
+.score-panel .hearts li {
+    list-style: none;
+    display: inline-block;
 }

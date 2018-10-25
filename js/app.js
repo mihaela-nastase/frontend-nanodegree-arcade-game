@@ -138,8 +138,19 @@ Player.prototype.checkCollision = function() {
 		if (collision === true) {
 			player.x = 200;
 			player.y = 400;
+
+			//upon colliding, you lose one life/heart
+			(function subtractHearts(){
+				if (lives > 0) {
+					lives--;
+					drawLives();
+				}
+				else {
+					lives = -1;
+				}
+			})();
 		}
-	})
+	});
 }
 
 Player.prototype.render = function() {
@@ -168,17 +179,48 @@ document.addEventListener('keyup', function(e) {
 	player.keyMap[e.keyCode] = 0; // When a key is released its value is set to 0
 });
 
-//set enemies with an immediately-invoked function
-(function instantiateEnemies() {
-	allEnemies = [];
-	allEnemies.push(new Enemy(-100, 60));
-	allEnemies.push(new Enemy(-200, 145));
-	allEnemies.push(new Enemy(-300, 225));
-	// the next two enemies are on the first and last lane. There is only one enemy in the middle lane.
-	allEnemies.push(new Enemy(-600, 60));
-	allEnemies.push(new Enemy(-600, 225));
-})();
 
+const heart = document.querySelectorAll(".fa-heart");
+const max_lives = 3; // There are technically 4 lives. Upon losing the three lives/hearts displayed on the screen, the player still has one more life. That is the case because the three lives are extra lives that can be replenished.
+let lives;
+
+//display the remaining lives
+function drawLives() {
+	for (var i = 0; i < max_lives; i++) {
+		if (i < lives) {
+			heart[i].style.visibility="visible";
+		}
+		else {
+			heart[i].style.visibility="hidden";
+		}
+	}
+}
+
+//(re)start the game
+function restartGame() {
+
+	setTimeout (function() {
+		//re(set) the hearts
+		heart[2].style.visibility="visible";
+		heart[1].style.visibility="visible";
+		heart[0].style.visibility="visible";
+		lives = max_lives;
+
+		//set enemies with an immediately-invoked function
+		(function instantiateEnemies() {
+			allEnemies = [];
+			allEnemies.push(new Enemy(-100, 60));
+			allEnemies.push(new Enemy(-200, 145));
+			allEnemies.push(new Enemy(-300, 225));
+			// the next two enemies are on the first and last lane. There is only one enemy in the middle lane.
+			allEnemies.push(new Enemy(-600, 60));
+			allEnemies.push(new Enemy(-600, 225));
+		})();
+	});
+}
+
+//start the game
+restartGame();
 
 /* Box model detection, return true on collision */
 //source: https://benjaminhorn.io/code/pixel-accurate-collision-detection-with-javascript-and-canvas/
