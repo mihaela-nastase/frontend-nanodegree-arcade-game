@@ -37,6 +37,14 @@ body {
 	margin-left: 21%;
 }
 
+.score-panel .restart {
+    float: right;
+    cursor: pointer;
+	/*increase clickable area for the button -- solution from here: https://stackoverflow.com/questions/11078509/how-to-increase-the-clickable-area-of-a-a-tag-button */
+    z-index: 1;
+    padding: 1.5em;
+    margin: -1.5em;
+}
 
 /*
 *Styles for the End Screen

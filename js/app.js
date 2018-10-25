@@ -195,6 +195,7 @@ Player.prototype.checkCollision = function() {
 	});
 }
 
+// Render the player. This method uses the sprite name, direction, and index to coin the name of the png file to be rendered
 Player.prototype.render = function() {
 	ctx.drawImage(Resources.get(this.sprite+this.direction+this.spriteIndex+'.png'), this.x, this.y, 105, 170);
 };
@@ -258,6 +259,9 @@ function drawLives() {
 	}
 }
 
+//the restart button resets the score, hearts, timer
+const restartButton = document.querySelector(".restart");
+restartButton.addEventListener("click", restartGame);
 
 // the timer displays the seconds and minutes that have passed
 const timer = document.querySelector(".timer");
@@ -285,6 +289,10 @@ function restartGame() {
 		sec = 0;
 		timer.innerText = "00:00";
 		clearInterval(myInterval);
+
+		//reset the player's position
+		player.x = 200;
+		player.y = 400;
 
 		//re(set) enemies with an immediately-invoked function
 		(function instantiateEnemies() {
