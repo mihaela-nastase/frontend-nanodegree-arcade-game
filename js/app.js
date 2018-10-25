@@ -81,7 +81,6 @@ Player.prototype.animate = function(direction, dt, stop=false) {
 // The update method makes the player move when input is received
 Player.prototype.update = function(dt) {
 
-
 	const max = Math.max(...this.keyMap); // this selects the highest value from the keyMap, that is, the key last pressed
 
 	//if a key was pressed then max would be higher than zero
@@ -126,6 +125,21 @@ Player.prototype.update = function(dt) {
 		this.x = 200;
 		this.y = 400;	
 	}
+
+	//check for enemy collision
+	player.checkCollision();
+}
+
+
+// This method checks whether the player has collided with an enemy.
+Player.prototype.checkCollision = function() {
+	allEnemies.forEach(function(enemy) {
+		var collision = hitBox(player, enemy);
+		if (collision === true) {
+			player.x = 200;
+			player.y = 400;
+		}
+	})
 }
 
 Player.prototype.render = function() {
@@ -164,3 +178,15 @@ document.addEventListener('keyup', function(e) {
 	allEnemies.push(new Enemy(-600, 60));
 	allEnemies.push(new Enemy(-600, 225));
 })();
+
+
+/* Box model detection, return true on collision */
+//source: https://benjaminhorn.io/code/pixel-accurate-collision-detection-with-javascript-and-canvas/
+function hitBox( source, target ) {
+	return !(
+		( ( source.y + source.height ) < ( target.y ) ) ||
+		( source.y > ( target.y + target.height ) ) ||
+		( ( source.x + source.width ) < target.x ) ||
+		( source.x > ( target.x + target.width ) )
+	);
+};
