@@ -37,13 +37,45 @@ var Player = function() {
 
 // The update method makes the player move when input is received
 Player.prototype.update = function() {
-	
+
+	//update position
+	if (this.keyPress === 'left') {
+		this.x -= 50;
+	}
+	else if (this.keyPress === 'right') {
+		this.x += 50;
+	}
+	if (this.keyPress === 'up') {
+		this.y -= 50;
+	}
+	else if (this.keyPress === 'down') {
+		this.y += 50;
+	}
+	this.keyPress = null;
+
+	//set axis boundaries 
+	if (this.x < 0) {
+		this.x = 0;
+	} else if (this.x > 400) {
+		this.x = 400;
+	}
+	else if (this.y > 400) {
+		this.y = 400;
+	}
+	//reset position if the player reaches the water
+	else if (this.y < 5) {
+		this.x = 200;
+		this.y = 400;	
+	}
 }
 
 Player.prototype.render = function() {
 	ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+Player.prototype.handleInput = function(e) {
+	this.keyPress = e;
+};
 
 // Now instantiate the objects.
 // An array called allEnemies holds the enemies
@@ -52,8 +84,7 @@ var allEnemies = [];
 var player = new Player();
 
 
-// This listens for key presses and sends the keys to your
-// Player.handleInput() method. You don't need to modify this.
+// This listens for key presses and sends the keys to the Player.handleInput() method.
 document.addEventListener('keyup', function(e) {
     var allowedKeys = {
         37: 'left',
