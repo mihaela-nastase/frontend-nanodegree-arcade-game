@@ -138,6 +138,7 @@ Player.prototype.update = function(dt) {
 
 	//check for enemy collision
 	player.checkCollision();
+
 }
 
 
@@ -304,6 +305,10 @@ function restartGame() {
 			allEnemies.push(new Enemy(-600, 60));
 			allEnemies.push(new Enemy(-600, 225));
 		})();
+
+	//spawn collectables
+	setTimeout(instantiateCollectables, 5000);
+	// 5000 = Initial timer responsible for spawning collectables when the page is first loaded
 	}, 100);
 
 	//start the timer upon the first move
@@ -312,6 +317,46 @@ function restartGame() {
 
 //start the game
 restartGame();
+
+
+// store collectables in an array
+let allCollectables = [];
+
+var Collectable = function(x, y) {
+	this.x = x;
+	this.y = y;
+	this.width = 40;
+	this.height = 50;
+	this.visible = true;
+	this.sprite = 'images/heart.png';
+}
+
+function instantiateCollectables() {
+	if (allCollectables.length === 0 && lives > -1 && lives < max_lives) {
+
+		//generate a collectable heart at a random position, on the conditions stipulated above, i.e. that there are none present on the canvas, the player is not at full health, and the game is not over
+		var collectable = null;
+		do {
+			function getRandomNumber(min, max) { return Math.floor(Math.random() * (max - min)) + min; }
+			var random_column = getRandomNumber(40, 11) * 10;
+			var random_row = getRandomNumber(40, 11) * 10;
+			var collectable = new Collectable(random_row, random_column);
+		} while (hitBox(player, collectable)===true) // the heart will not spawn in the same position as the player
+
+		allCollectables.push(collectable);
+	}
+
+	// run this function continuously to check if we need to spawn lives
+	var rand = Math.floor(Math.random() * 10000 + 4000);
+	setTimeout(instantiateCollectables, rand); // set a timeout before exiting the instantiateCollectables function so the function will run repeatedly
+}
+
+Collectable.prototype.render = function() {
+	if (this.visible === true) {
+		ctx.drawImage(Resources.get(this.sprite), this.x, this.y, 60,90);
+	}
+}
+
 
 /* Box model detection, return true on collision */
 //source: https://benjaminhorn.io/code/pixel-accurate-collision-detection-with-javascript-and-canvas/

@@ -1,3 +1,5 @@
+// I have only made small edits here to load my player character, add dt to the player and render collectable items
+
 /* Engine.js
  * This file provides the game loop functionality (update entities and render),
  * draws the initial game board on the screen, and then calls the update and
@@ -155,6 +157,11 @@ var Engine = (function(global) {
         });
 
         player.render();
+
+		//render the collectables
+		allCollectables.forEach(function(collectable) {
+			collectable.render();
+		});
     }
 
     /* This function does nothing but it could have been a good place to
@@ -194,8 +201,10 @@ var Engine = (function(global) {
 		'images/fox-right1.png',
 		'images/fox-right2.png',
 		'images/fox-right3.png',
-		'images/fox-right4.png'
+		'images/fox-right4.png',
 
+		//collectables
+		'images/heart.png'
     ]);
     Resources.onReady(init);
 
