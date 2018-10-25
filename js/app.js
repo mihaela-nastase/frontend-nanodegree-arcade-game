@@ -138,7 +138,9 @@ Player.prototype.update = function(dt) {
 
 	//check for enemy collision
 	player.checkCollision();
-
+	
+	// pick up collectable items
+	player.pickUpCollectables();
 }
 
 
@@ -355,6 +357,26 @@ Collectable.prototype.render = function() {
 	if (this.visible === true) {
 		ctx.drawImage(Resources.get(this.sprite), this.x, this.y, 60,90);
 	}
+}
+
+//pick up collectable items
+Player.prototype.pickUpCollectables = function() {
+
+	allCollectables.forEach(function(collectable) {
+		var collision =	hitBox(player, collectable);
+		//picking up a heart replenishes one life
+		if (collision === true) {
+			(function addHearts() {
+				if (lives < max_lives) {
+					lives++;
+					drawLives();
+					// the collectable is removed
+					collectable.visible = false;
+					allCollectables.length = 0;
+				}
+			})();
+		}
+	});
 }
 
 
