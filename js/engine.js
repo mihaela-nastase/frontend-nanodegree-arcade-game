@@ -95,8 +95,13 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
-		// I added dt for smooth player movement 
+		// I added dt for smooth player movement
         player.update(dt);
+
+		//this will make the collectables bounce
+		allCollectables.forEach(function(collectable) {
+            collectable.update(dt);
+        });
     }
 
     /* This function initially draws the "game level", it will then call

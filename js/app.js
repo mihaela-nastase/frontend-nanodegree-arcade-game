@@ -138,7 +138,7 @@ Player.prototype.update = function(dt) {
 
 	//check for enemy collision
 	player.checkCollision();
-	
+
 	// pick up collectable items
 	player.pickUpCollectables();
 }
@@ -331,6 +331,7 @@ var Collectable = function(x, y) {
 	this.height = 50;
 	this.visible = true;
 	this.sprite = 'images/heart.png';
+	this.fixedY = y; // this will make the heart bounce vertically
 }
 
 function instantiateCollectables() {
@@ -358,6 +359,12 @@ Collectable.prototype.render = function() {
 		ctx.drawImage(Resources.get(this.sprite), this.x, this.y, 60,90);
 	}
 }
+
+// this method makes the collectable bounce up and down
+Collectable.prototype.update = function(dt) {
+	this.y = this.fixedY + (Math.sin(Date.now()/250)*10);
+};
+
 
 //pick up collectable items
 Player.prototype.pickUpCollectables = function() {
