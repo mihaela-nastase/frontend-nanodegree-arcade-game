@@ -26,16 +26,30 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
+// Create the player class
+var Player = function() {
+	this.x = 200;
+	this.y = 400;
+	this.sprite = 'images/char-boy.png';
+}
+
+// The player class requires an update(), and a render() method.
+
+// The update method makes the player move when input is received
+Player.prototype.update = function() {
+	
+}
+
+Player.prototype.render = function() {
+	ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
 
 
-// Now instantiate your objects.
+// Now instantiate the objects.
 // An array called allEnemies holds the enemies
 var allEnemies = [];
-// Place the player object in a variable called player
-
+// A variable called player holds the player object
+var player = new Player();
 
 
 // This listens for key presses and sends the keys to your
@@ -48,7 +62,7 @@ document.addEventListener('keyup', function(e) {
         40: 'down'
     };
 
-    //player.handleInput(allowedKeys[e.keyCode]);
+    player.handleInput(allowedKeys[e.keyCode]);
 });
 
 //set enemies with an immediately-invoked function
