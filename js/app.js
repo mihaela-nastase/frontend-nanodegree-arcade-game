@@ -157,6 +157,38 @@ Player.prototype.checkCollision = function() {
 				}
 				else {
 					lives = -1;
+					(function gameOver() {
+
+						// clear enemies
+						allEnemies = [];
+
+						//clear collectables
+						allCollectables = [];
+
+						//stop the timer
+						clearInterval(myInterval);
+
+						//display the end screen modal showing the score
+						const endScreen = document.querySelector(".end-screen");
+						endScreen.style.visibility = "visible";
+						const message = document.querySelector(".message");
+						message.innerHTML = "Game Over";
+						const highscore = document.querySelector(".end-score");
+						highscore.innerHTML = "You've reached the score of " + score +" in " +  timer.innerText + " minutes.";
+
+						//pressing play again restarts the game
+						const playButton = document.querySelector(".play-again");
+						playButton.onclick = function() {
+							endScreen.style.visibility = "hidden";
+							restartGame();
+						}
+
+						//when the user clicks on (x), close the modal
+						const closeButton = document.querySelector(".close");
+						closeButton.onclick = function() {
+							endScreen.style.visibility = "hidden";
+						}
+					})();
 				}
 			})();
 		}
